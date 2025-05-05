@@ -1,10 +1,16 @@
 FROM python:3.10-slim
 
-# Instala dependencias del sistema necesarias
+# Evita preguntas interactivas durante la instalación
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Instala herramientas del sistema y dependencias de compilación
 RUN apt-get update && apt-get install -y \
     git \
     gcc \
     g++ \
+    curl \
+    ca-certificates \
+    build-essential \
     libxml2-dev \
     libxslt-dev \
     libldap2-dev \
@@ -24,14 +30,13 @@ RUN apt-get update && apt-get install -y \
     libxcb1-dev \
     zlib1g-dev \
     libmagic1 \
-    build-essential \
     libfreetype6-dev \
     libpng-dev \
     python3-dev \
     python3-pip \
-    && apt-get clean
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Instala dependencias de Python necesarias
-RUN pip install --upgrade pip
+# Copia e instala dependencias de Python
 COPY requirements.txt .
+RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
