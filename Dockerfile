@@ -10,7 +10,6 @@ RUN apt-get update && apt-get install -y \
     libldap2-dev \
     libsasl2-dev \
     libpq-dev \
-    # Soporte para imágenes JPEG
     libjpeg62-turbo-dev \
     libffi-dev \
     libssl-dev \
@@ -30,16 +29,9 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     python3-dev \
     python3-pip \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/*
+    && apt-get clean
 
 # Instala dependencias de Python necesarias
-COPY requirements.txt .
 RUN pip install --upgrade pip
+COPY requirements.txt .
 RUN pip install -r requirements.txt
-
-# Copia el resto de la app (si no lo haces más abajo)
-COPY . .
-
-# Comando final (puedes ajustarlo según lo que uses)
-CMD ["odoo", "-c", "/app/odoo.conf"]
