@@ -3,7 +3,7 @@ FROM python:3.10-slim
 # Evita preguntas interactivas durante la instalación
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Instala herramientas del sistema y dependencias de compilación
+# Instala herramientas del sistema y dependencias de compilación necesarias
 RUN apt-get update && apt-get install -y \
     git \
     gcc \
@@ -34,6 +34,7 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     python3-dev \
     python3-pip \
+    libldap-dev \ # Agregado para la compatibilidad con python-ldap
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copia e instala dependencias de Python
