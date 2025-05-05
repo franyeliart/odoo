@@ -1,29 +1,53 @@
-FROM python:3.10
+FROM python:3.10-slim
 
+# Evitar preguntas interactivas
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Instala dependencias del sistema necesarias
 RUN apt-get update && apt-get install -y \
     git \
-    build-essential \
+    gcc \
+    g++ \
+    libxml2-dev \
     libxslt-dev \
-    libzip-dev \
     libldap2-dev \
     libsasl2-dev \
-    libjpeg-dev \
     libpq-dev \
+    libjpeg-dev \
     libffi-dev \
     libssl-dev \
-    python3-dev \
+    libjpeg8-dev \
+    liblcms2-dev \
+    libblas-dev \
+    libatlas-base-dev \
+    libwebp-dev \
+    libtiff-dev \
+    libopenjp2-7-dev \
+    libharfbuzz-dev \
+    libfribidi-dev \
+    libxcb1-dev \
     zlib1g-dev \
-    node-less \
-    npm
+    libmagic1 \
+    build-essential \
+    libfreetype6-dev \
+    libpng-dev \
+    python3-dev \
+    python3-pip \
+    && apt-get clean
 
-RUN npm install -g rtlcss
-
+# Crear directorio para Odoo
+RUN mkdir /odoo
 WORKDIR /odoo
-COPY . .
 
+# Copiar requerimientos y código fuente
+COPY requirements.txt /odoo/
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
+COPY . /odoo/
+
+# Puerto expuesto
 EXPOSE 8069
 
-CMD ["python3", "odoo-bin", "-c", "odoo.conf"]
+# Comando para correr Odoo
+CMD ["python3", "odoo-bin"]
